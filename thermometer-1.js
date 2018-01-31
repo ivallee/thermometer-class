@@ -79,7 +79,7 @@ class Observer {
  }
 }
 
-const weather = new Thermometer();
-const computer = new Observer(1, 0);
-weather.add(computer);
-weather.readTemp(weatherData);
+const thermometer = new Thermometer();
+const observer = new Observer(1, 0);
+thermometer.add(observer);
+thermometer.readTemp(weatherData);
