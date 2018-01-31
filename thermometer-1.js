@@ -29,10 +29,13 @@ class Thermometer {
   }
 
   checkConditions(observer) {
-    if (this.lastHigh > observer.fluctuation || this.lastLow > observer.fluctuation) {
+    // console.log('LASSSSSSSSSSTS :', this.lastHigh, this.lastLow)
+    if (this.lastHigh > observer.fluctuation) {
+      return true;
+    } else if (this.lastLow < -Math.abs(observer.fluctuation)) {
       return true;
     } else {
-      return false;
+      false;
     }
   }
 
@@ -75,12 +78,11 @@ class Observer {
  }
 
  update(data) {
-   console.log(`Observer ${this.num}: `, data);
+   console.log(`Observer ${this.num} threshold: `, data);
  }
 }
 
 const weather = new Thermometer();
 const computer = new Observer(1, 0);
-// const phone = new Observer(2, 32);
 weather.add(computer);
 weather.readTemp(weatherData);
