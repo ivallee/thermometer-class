@@ -4,7 +4,13 @@ const weatherData = [1.5, 1.0, 1.5, 2.0, 1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5, 0
 class Thermometer {
   constructor() {
     this.observers = [];
-    this.currentTemp;
+    this.temperature = null;
+    this.maxTemp = null;
+    this.minTemp = null;
+  }
+
+  getTemp() {
+    return this.temperature;
   }
 
   add(observer) {
@@ -22,20 +28,33 @@ class Thermometer {
     }
   }
 
-  notifyAll(data){
-    this.observers.forEach(o => o.update(data));
+  notifyObservers(temp){
+    this.observers.forEach(o => {
+      
+      // 
+
+      if (temp === o.threshold) {
+        o.update(temp);
+      }
+    });
+
+    // Check conditions, then notify
   }
 
-  getWeather(weatherData){
+  readTemp(weatherData){
+    weatherData.forEach(dataPoint => {
+      this.temperature = dataPoint;
+      this.notifyObservers(this.temperature);
+    });
 
   }
 
 }
 
 class Observer {
- constructor(num, { unit, threshold }) {
+ constructor(num, threshold) {
    this.num = num;
-   this.options = { unit, threshold };
+   this.threshold = threshold;
  }
 
  update(data) {
@@ -44,8 +63,11 @@ class Observer {
 }
 
 const weather = new Thermometer();
-const computer = new Observer(1, {unit: 'C', threshold: 'BOILING'});
+const computer = new Observer(1, 0);
+const phone = new Observer(2, 32);
 weather.add(computer);
+weather.add(phone);
 console.log(weather)
 weather.notify(computer, 'This is data')
 console.log(weather.observers);
+weather.readTemp(weatherData);
