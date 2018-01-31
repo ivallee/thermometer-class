@@ -5,8 +5,8 @@ class Thermometer {
   constructor() {
     this.observers = [];
     this.temperature = null;
-    this.maxTemp = null;
-    this.minTemp = null;
+    this.lastHigh = null;
+    this.lastLow = null;
   }
 
   getTemp() {
@@ -30,8 +30,7 @@ class Thermometer {
 
   notifyObservers(temp){
     this.observers.forEach(o => {
-      
-      // 
+      console.log(this.lastHigh, this.lastLow);
 
       if (temp === o.threshold) {
         o.update(temp);
@@ -39,11 +38,24 @@ class Thermometer {
     });
 
     // Check conditions, then notify
+
+    // if temp is less than current, lastHigh = temp;
+    // if temp is more than current, lastLow = temp;
+    // if 
   }
 
   readTemp(weatherData){
-    weatherData.forEach(dataPoint => {
-      this.temperature = dataPoint;
+    weatherData.forEach(newTemp => {
+      
+      if (newTemp > this.temperature) {
+        this.lastHigh = newTemp;
+      }
+
+      if (newTemp < this.temperature) {
+        this.lastLow = newTemp;
+      }
+      this.temperature = newTemp;
+      
       this.notifyObservers(this.temperature);
     });
 
@@ -64,10 +76,7 @@ class Observer {
 
 const weather = new Thermometer();
 const computer = new Observer(1, 0);
-const phone = new Observer(2, 32);
+// const phone = new Observer(2, 32);
 weather.add(computer);
-weather.add(phone);
-console.log(weather)
 weather.notify(computer, 'This is data')
-console.log(weather.observers);
 weather.readTemp(weatherData);
