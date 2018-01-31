@@ -28,32 +28,36 @@ class Thermometer {
     }
   }
 
-  notifyObservers(temp){
-    this.observers.forEach(o => {
-      console.log(this.lastHigh, this.lastLow);
+  checkConditions(observer) {
+    if (this.lastHigh > observer.fluctuation || this.lastLow > observer.fluctuation) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-      if (temp === o.threshold) {
-        o.update(temp);
+  notifyObservers(temp){
+    this.observers.forEach((observer, index) => {
+      // console.log(this.lastHigh, this.lastLow, this.temperature);
+      // console.log('fluctuation test:', this.lastLow < observer.fluctuation)
+      if (temp === observer.threshold && this.checkConditions(observer)) {
+        observer.update(temp);
       }
     });
 
-    // Check conditions, then notify
-
-    // if temp is less than current, lastHigh = temp;
-    // if temp is more than current, lastLow = temp;
-    // if 
   }
 
   readTemp(weatherData){
-    weatherData.forEach(newTemp => {
+    weatherData.forEach((newTemp, index) => {
+      console.log('tempurature array: ', weatherData[index])
       
       if (newTemp > this.temperature) {
         this.lastHigh = newTemp;
       }
-
       if (newTemp < this.temperature) {
         this.lastLow = newTemp;
       }
+      
       this.temperature = newTemp;
       
       this.notifyObservers(this.temperature);
@@ -67,6 +71,7 @@ class Observer {
  constructor(num, threshold) {
    this.num = num;
    this.threshold = threshold;
+   this.fluctuation = 0.5;
  }
 
  update(data) {
@@ -78,5 +83,4 @@ const weather = new Thermometer();
 const computer = new Observer(1, 0);
 // const phone = new Observer(2, 32);
 weather.add(computer);
-weather.notify(computer, 'This is data')
 weather.readTemp(weatherData);
