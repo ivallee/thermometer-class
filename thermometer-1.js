@@ -29,7 +29,6 @@ class Thermometer {
   }
 
   checkConditions(observer) {
-    // console.log('LASSSSSSSSSSTS :', this.lastHigh, this.lastLow)
     if (this.lastHigh > observer.fluctuation) {
       return true;
     } else if (this.lastLow < -Math.abs(observer.fluctuation)) {
@@ -41,8 +40,6 @@ class Thermometer {
 
   notifyObservers(temp){
     this.observers.forEach((observer, index) => {
-      // console.log(this.lastHigh, this.lastLow, this.temperature);
-      // console.log('fluctuation test:', this.lastLow < observer.fluctuation)
       if (temp === observer.threshold && this.checkConditions(observer)) {
         observer.update(temp);
       }
@@ -52,7 +49,7 @@ class Thermometer {
 
   readTemp(weatherData){
     weatherData.forEach((newTemp, index) => {
-      console.log('tempurature array: ', weatherData[index])
+      // console.log('tempurature array: ', weatherData[index])
       
       if (newTemp > this.temperature) {
         this.lastHigh = newTemp;
