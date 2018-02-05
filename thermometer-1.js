@@ -5,6 +5,7 @@ class Thermometer {
   constructor() {
     this.observers = [];
     this.temperature = null;
+    this.prevTemperature = null;
     this.lastHigh = null;
     this.lastLow = null;
   }
@@ -28,28 +29,40 @@ class Thermometer {
     }
   }
 
-  checkConditions(observer) {
-    if (this.lastHigh > observer.fluctuation) {
-      return true;
-    } else if (this.lastLow < -Math.abs(observer.fluctuation)) {
-      return true;
-    } else {
-      false;
+  checkFluctuation(observer) {
+    return (this.lastHigh > observer.fluctuation || this.lastLow < -Math.abs(observer.fluctuation)) ? true : false;
+  }
+
+  checkDirection(observer) {
+    console.log(this.temperature, this.prevTemperature)
+    switch (observer.direction) {
+      case 'INC':
+        return this.temperature > this.prevTemperature;
+        break;
+      case 'DEC':
+        return this.temperature < this.prevTemperature; 
+        break;
+    
+      default:
+        return true;
+        break;
     }
+    
+  
   }
 
   notifyObservers(temp){
-    this.observers.forEach((observer, index) => {
-      if (temp === observer.threshold && this.checkConditions(observer)) {
+    this.observers.forEach((observer) => {
+      // console.log(this.checkDirection(observer));
+      if (temp === observer.threshold && this.checkFluctuation(observer) && this.checkDirection(observer)) {
         observer.update(temp);
       }
     });
-
   }
 
-  readTemp(weatherData){
+  readTemp(weatherData) {
+    // Simulates new data points over time
     weatherData.forEach((newTemp, index) => {
-      // console.log('tempurature array: ', weatherData[index])
       
       if (newTemp > this.temperature) {
         this.lastHigh = newTemp;
@@ -58,6 +71,7 @@ class Thermometer {
         this.lastLow = newTemp;
       }
       
+      this.prevTemperature = this.temperature;
       this.temperature = newTemp;
       
       this.notifyObservers(this.temperature);
@@ -72,6 +86,7 @@ class Observer {
    this.num = num;
    this.threshold = threshold;
    this.fluctuation = 0.5;
+   this.direction = 'INC';
  }
 
  update(data) {
