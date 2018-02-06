@@ -23,11 +23,9 @@ class Subject {
   }
 
   notifyObservers(temp) {
-    this.observers.forEach((observer, index) => {
-      if (temp === observer.threshold && this.checkFluctuation(observer)) {
-        observer.update(temp);
-      }
-    });
+    this.observers.forEach(o =>  o.update(temp));
 
   }
 }
+
+module.exports = Subject;
