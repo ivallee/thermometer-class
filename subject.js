@@ -22,8 +22,8 @@ class Subject {
     }
   }
 
-  notifyObservers(temp) {
-    this.observers.forEach(o =>  o.update(temp));
+  notifyObservers(data) {
+    this.observers.forEach(o =>  o.update(data));
 
   }
 }
